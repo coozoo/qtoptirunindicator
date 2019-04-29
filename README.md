@@ -33,7 +33,7 @@ Bumplebee running is running
 
 ## Technical Info
 
-So I've use this repo
+So I've used this repo
 
 ```shell
 chenxiaolong/bumblebee
