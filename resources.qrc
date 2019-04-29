@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+   <file>images/intel_circle.png</file>
+   <file>images/nvidia_circle.png</file>
+</qresource>
+</RCC>
