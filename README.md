@@ -14,7 +14,30 @@ Fine but excluding one thing I don't see the current state of cards. Again googl
 
 So after spending few hours I've got this result. Simple and small program :) 
 
+## Usage
+
+Simply lanch it and you will see icon in systemtray.
+
+Click on icon to show details.
+
+Icon will change depends on current video card state:
+
+Bumplebee is not running
+
+<img src="https://user-images.githubusercontent.com/25594311/56906254-82071e80-6aaa-11e9-936c-c5a35b434fda.png" width="60%"></img> 
+
+Bumplebee running is running
+
+<img src="https://user-images.githubusercontent.com/25594311/56906262-84697880-6aaa-11e9-8528-10b93e90212c.png" width="60%"></img> 
+
+
 ## Technical Info
+
+So I've use this repo
+
+```shell
+chenxiaolong/bumblebee
+```
 
 So actually currently this tool relies only on one command:
 
@@ -26,7 +49,7 @@ $ optirun --status
 Bumblebee status: Ready (3.2.1). X is PID 8806, 1 applications using bumblebeed.
 ```
 
-If your output looks simmilar it should work too.
+If your output looks simmilar then this program should work for you too.
 
 ## Instalation
 
@@ -61,7 +84,4 @@ That's all now you can run:
 ```shell
 $ ./qtoptirunindicator
 ```
-
-## Usage
-
 
