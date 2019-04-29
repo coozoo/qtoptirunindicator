@@ -39,7 +39,7 @@ So I've used this repo to setup my system and write this small tool
 chenxiaolong/bumblebee
 ```
 
-So actually currently this tool relies only on one command:
+So actually currently this tool relies on only one command:
 
 ```shell
 $ optirun --status
