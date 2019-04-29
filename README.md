@@ -85,3 +85,4 @@ That's all now you can run:
 $ ./qtoptirunindicator
 ```
 
+## maybe it will be extended with some fetures
