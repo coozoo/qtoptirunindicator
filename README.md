@@ -22,11 +22,11 @@ Click on icon to show details.
 
 Icon will change depends on current video card state:
 
-Bumplebee is not running
+Bumblebee is not running
 
 <img src="https://user-images.githubusercontent.com/25594311/56906254-82071e80-6aaa-11e9-936c-c5a35b434fda.png" width="60%"></img> 
 
-Bumplebee running is running
+Bumblebee running is running
 
 <img src="https://user-images.githubusercontent.com/25594311/56906262-84697880-6aaa-11e9-8528-10b93e90212c.png" width="60%"></img> 
 
