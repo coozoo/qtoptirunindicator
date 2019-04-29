@@ -53,6 +53,8 @@ If your output looks similar then this program should work for you too.
 
 Program update interval 1 second, it's possible to change but currently no way to save and restore settings, cause simply no any configuration files :)
 
+To close program perform right click and select quit from menu.
+
 ## Instalation
 
 Suppose you have installed QT5 (on fedora you can do that # dnf install qt5*):
