@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QRegularExpression>
 #include <QSystemTrayIcon>
+#include "filemonitor.h"
 
 
 namespace Ui {
@@ -41,6 +42,7 @@ public:
     ~MainWindow();
 
     QProcess *procexec;
+    FileMonitor *bbswitchFile;
 
     void setinterval(int m_interval)
     {
@@ -122,6 +124,9 @@ private slots:
     void on_discretestateChanged(QString discretestate);
 
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
+
+public slots:
+    void on_bbswitchFile_Changed(const QString &content);
 
 };
 

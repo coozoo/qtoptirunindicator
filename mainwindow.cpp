@@ -8,8 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->interval_spinBox, SIGNAL(valueChanged(int)),this,SLOT(on_interval_spinbox_valueChanged(int)));
-    setinterval(ui->interval_spinBox->value()*1000);
+    connect(ui->interval_spinBox, SIGNAL(valueChanged(int)), this, SLOT(on_interval_spinbox_valueChanged(int)));
+    setinterval(ui->interval_spinBox->value() * 1000);
     connect(this, SIGNAL(bumblebeestateChanged(QString)), this, SLOT(on_bumblebeestateChanged(QString)));
     connect(this, SIGNAL(xstateChanged(QString)), this, SLOT(on_xstateChanged(QString)));
     connect(this, SIGNAL(discretestateChanged(QString)), this, SLOT(on_discretestateChanged(QString)));
@@ -26,10 +26,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&executeUseLoopTimer, SIGNAL(timeout()), this, SLOT(on_executeUseLoopTimer()));
 
+    bbswitchFile = new FileMonitor(this);
+    bbswitchFile->setfileName("/proc/acpi/bbswitch");
+    bbswitchFile->init();
+    connect(bbswitchFile, SIGNAL(fileMessage(QString)), this, SLOT(on_bbswitchFile_Changed(QString)));
+
     if (!executeUseLoopTimer.isActive())
         {
-            executeUseLoopTimer.setSingleShot(false);
-            executeUseLoopTimer.start(getinterval());
+            executeUseLoopTimer.setSingleShot(true);
+            executeUseLoopTimer.start(0);
         }
     QIcon icon = QIcon(":/images/intel_circle.png");
     trayIcon->setIcon(icon);
@@ -118,14 +123,9 @@ void MainWindow::cmdUpdateText()
                                 {
                                     discrete = "off";
                                 }
-                            else
-                                {
-                                    discrete = "on";
-                                }
                         }
                     if (match.captured(2).contains("PID"))
                         {
-                            discrete = "on";
                             QRegularExpression pidreg(".+PID\\s([0-9]+),\\s([0-9]+)?\\s.+");
 
                             QRegularExpressionMatchIterator pidregiterrator = pidreg.globalMatch(match.captured(2));
@@ -143,7 +143,15 @@ void MainWindow::cmdUpdateText()
         }
     setbumblebeestate(bumble);
     setxstate(xpid);
-    setdiscretestate(discrete);
+    if (getdiscretestate().indexOf(discrete) == -1 || getdiscretestate().isEmpty())
+        {
+            setdiscretestate(discrete);
+            if (!executeUseLoopTimer.isActive() && !getdiscretestate().toLower().contains("off"))
+                {
+                    executeUseLoopTimer.setSingleShot(false);
+                    executeUseLoopTimer.start(getinterval());
+                }
+        }
 
 }
 
@@ -165,17 +173,17 @@ void MainWindow::on_discretestateChanged(QString discretestate)
     int first = discretestate.toInt(&ok);
     Q_UNUSED(first);
     if (ok)
-    {
-        QIcon icon = QIcon(":/images/nvidia_circle.png");
-        trayIcon->setIcon(icon);
-        setWindowIcon(icon);
-    }
+        {
+            QIcon icon = QIcon(":/images/nvidia_circle.png");
+            trayIcon->setIcon(icon);
+            setWindowIcon(icon);
+        }
     else
-    {
-        QIcon icon = QIcon(":/images/intel_circle.png");
-        trayIcon->setIcon(icon);
-        setWindowIcon(icon);
-    }
+        {
+            QIcon icon = QIcon(":/images/intel_circle.png");
+            trayIcon->setIcon(icon);
+            setWindowIcon(icon);
+        }
 
 }
 
@@ -210,39 +218,53 @@ void MainWindow::createActions()
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    switch (reason) {
-    case QSystemTrayIcon::Trigger:
-        if(this->isVisible())
-        {this->hide();}
-        else
-        {this->showNormal();}
-        break;
+    switch (reason)
+        {
+        case QSystemTrayIcon::Trigger:
+            if (this->isVisible())
+                {this->hide();}
+            else
+                {this->showNormal();}
+            break;
 //    case QSystemTrayIcon::DoubleClick:
 //        break;
 //    case QSystemTrayIcon::MiddleClick:
 //        break;
-    default:
-        ;
-    }
+        default:
+            ;
+        }
 }
 
 void MainWindow::on_interval_spinbox_valueChanged(int value)
 {
-    setinterval(value*1000);
-    if(value>1)
-    {
-        ui->interval_spinBox->setSuffix(" seconds");
-    }
+    setinterval(value * 1000);
+    if (value > 1)
+        {
+            ui->interval_spinBox->setSuffix(" seconds");
+        }
     else
-    {
-        ui->interval_spinBox->setSuffix(" second");
-    }
+        {
+            ui->interval_spinBox->setSuffix(" second");
+        }
     if (executeUseLoopTimer.isActive())
         {
             executeUseLoopTimer.stop();
             executeUseLoopTimer.setSingleShot(false);
             executeUseLoopTimer.start(getinterval());
         }
+}
+
+void MainWindow::on_bbswitchFile_Changed(const QString &content)
+{
+    QTextStream cout(stdout);
+    cout << content;
+    if (content.toLower().contains("off"))
+        {
+            setdiscretestate("off");
+        }
+    executeUseLoopTimer.stop();
+    executeUseLoopTimer.setSingleShot(true);
+    executeUseLoopTimer.start(0);
 }
 
 
