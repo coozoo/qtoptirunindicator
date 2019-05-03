@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
             platform="-64bit";
         #endif
     #endif
-    a.setProperty("appversion","0.02a" + platform);
+    a.setProperty("appversion","0.03a" + platform);
     a.setProperty("appname","QT Optirun Indicator");
     #ifdef Q_OS_LINUX
         a.setWindowIcon(QIcon(":/images/intel_circle.png"));

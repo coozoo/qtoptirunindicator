@@ -97,6 +97,7 @@ private:
 
     void createActions();
     void createTrayIcon();
+    void updateTrayTooltip();
 
     QAction *minimizeAction;
     QAction *maximizeAction;

@@ -104,7 +104,9 @@ void MainWindow::cmdUpdateText()
     QString xpid = "";
     QString discrete = "";
 
+//example of # optirun --status
 //Bumblebee status: Ready (3.2.1). X inactive. Discrete video card is off.
+//Bumblebee status: Ready (3.2.1). X inactive. Discrete video card is on.
 //Bumblebee status: Ready (3.2.1). X is PID 8806, 1 applications using bumblebeed.
     QRegularExpressionMatchIterator i = reg.globalMatch(appendText);
     if (i.isValid())
@@ -123,6 +125,10 @@ void MainWindow::cmdUpdateText()
                                 {
                                     discrete = "off";
                                 }
+                            else
+                            {
+                                  discrete = "on";
+                            }
                         }
                     if (match.captured(2).contains("PID"))
                         {
@@ -159,11 +165,13 @@ void MainWindow::cmdUpdateText()
 void MainWindow::on_bumblebeestateChanged(QString bumblebeestate)
 {
     ui->bumblebeeState_lineEdit->setText(bumblebeestate);
+    updateTrayTooltip();
 }
 
 void MainWindow::on_xstateChanged(QString xstate)
 {
     ui->xserverState_lineEdit->setText(xstate);
+    updateTrayTooltip();
 }
 
 void MainWindow::on_discretestateChanged(QString discretestate)
@@ -172,7 +180,7 @@ void MainWindow::on_discretestateChanged(QString discretestate)
     bool ok;
     int first = discretestate.toInt(&ok);
     Q_UNUSED(first);
-    if (ok)
+    if (ok || discretestate=="on")
         {
             QIcon icon = QIcon(":/images/nvidia_circle.png");
             trayIcon->setIcon(icon);
@@ -184,7 +192,7 @@ void MainWindow::on_discretestateChanged(QString discretestate)
             trayIcon->setIcon(icon);
             setWindowIcon(icon);
         }
-
+     updateTrayTooltip();
 }
 
 
@@ -262,9 +270,25 @@ void MainWindow::on_bbswitchFile_Changed(const QString &content)
         {
             setdiscretestate("off");
         }
+    else
+    {
+        setdiscretestate("on");
+    }
     executeUseLoopTimer.stop();
     executeUseLoopTimer.setSingleShot(true);
     executeUseLoopTimer.start(0);
+}
+
+void MainWindow::updateTrayTooltip()
+{
+    if(getdiscretestate()=="on" || getdiscretestate()=="off")
+    {
+        trayIcon->setToolTip("Bumblebee: " + getbumblebeestate() + "\nXserver: " + getxstate() + "\nDiscreteGPU: " + getdiscretestate());
+    }
+    else
+    {
+        trayIcon->setToolTip("Bumblebee: " + getbumblebeestate() + "\nXserver: " + getxstate() + "\nProcessess: " + getdiscretestate());
+    }
 }
 
 
