@@ -16,11 +16,11 @@ So after spending few hours I've got this result. Simple and small program :)
 
 ## Usage
 
-Simply lanch it and you will see icon in systemtray.
+Simply launch it and you will see icon in systemtray.
 
 Click on icon to show details.
 
-Icon will change depends on current video card state:
+Icon will be changed depends on current video card state:
 
 Bumblebee is not running
 
